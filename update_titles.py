@@ -8,10 +8,11 @@ import glob;
 import re;
 import xml.dom.minidom;
 
-
-ffmpeg="C:\\ffmpeg-20180810-87cc7e8-win64-static\\bin\\ffmpeg.exe";
+import os
+script_dir = (os.path.dirname(os.path.realpath(__file__)));
 
 input_dir = input("Enter directory to generate thumbnails for:");
+#input_dir = "Z:\\TV Shows\\特技人\\Season 01";
 input_dir = input_dir + os.sep + "*"
 
 print("Scanning " + input_dir + " ...")
@@ -51,8 +52,17 @@ for file in list_files:
 						break;
 			# update changes back into xml file
 			if hasUpdates:
-				with open(file, "w") as fp:
-					docelement.writexml(fp);		
+				try:
+					with open(file, "w") as fp:
+						docelement.writexml(fp);	
+				except PermissionError as e:
+					# create a new file at the script directory
+					print("Unable to update original files, updated file created instead.")
+					newfile = script_dir + os.sep + os.path.basename(file)
+					with open(newfile, "w") as fp:
+						docelement.writexml(fp);
+					
+
 
 input("Press Enter key to continue");
 
