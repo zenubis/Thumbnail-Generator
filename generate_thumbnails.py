@@ -10,7 +10,7 @@ import subprocess;
 
 ffmpeg="C:\\ffmpeg-20180810-87cc7e8-win64-static\\bin\\ffmpeg.exe";
 
-input_dir = input("Enter directory to generate thumbnails for:");
+input_dir = input("Enter directory to generate thumbnails for: ");
 input_dir = input_dir + os.sep + "*"
 
 
@@ -39,7 +39,6 @@ for file in list_files:
 		continue;
 
 	#print(thumbnail_filename)
-	# ffmpeg -ss 0:10:00 -i "Z:\TV Shows\扶摇\Season 01\扶摇 - s01e61.mp4" -vframes 1 -q:v 2 -vf scale=400:-1 output.jpg
 	cmd="{2:s} -ss 0:10:00 -i \"{0:s}\" -vframes 1 -q:v 2 -vf scale=400:-1 \"{1:s}\"".format(file, thumbnail_filename, ffmpeg);
 	print(cmd);
 	subprocess.run(cmd, shell=True);
