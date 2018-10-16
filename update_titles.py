@@ -11,8 +11,7 @@ import xml.dom.minidom;
 import os
 script_dir = (os.path.dirname(os.path.realpath(__file__)));
 
-input_dir = input("Enter directory to generate thumbnails for:");
-#input_dir = "Z:\\TV Shows\\特技人\\Season 01";
+input_dir = input("Enter directory to generate thumbnails for: ");
 input_dir = input_dir + os.sep + "*"
 
 print("Scanning " + input_dir + " ...")
@@ -38,29 +37,38 @@ for file in list_files:
 	docelement = DOMTree.documentElement;
 	if "episodedetails" == docelement.tagName:
 		#get titles
+		updateText = "第 {0:d} 集".format(int(result.group(2)));
 		edelement = docelement.getElementsByTagName("title");
+		needUpdate = True;
 		if None != edelement:
 			# remove all node
-			hasUpdates = False;
 			for node in edelement:
 				#print("number of childs:" + str(node.childNodes.length))
 				for child in node.childNodes:
 					if child.nodeType == xml.dom.minidom.Node.TEXT_NODE:
+						# check if the node that we're trying to add exists or not
+						if re.search(updateText, child.nodeValue) != None:
+							needUpdate = False; #exists, no need to update the file
+							break;	
 						node.removeChild(child);
-						node.appendChild(DOMTree.createTextNode("第 {0:d} 集".format(int(result.group(2)))));
-						hasUpdates = True;
-						break;
+
+
+			if not needUpdate:
+				continue;
+
+			# append our own text
+			node.appendChild(DOMTree.createTextNode(updateText));
+			
 			# update changes back into xml file
-			if hasUpdates:
-				try:
-					with open(file, "w") as fp:
-						docelement.writexml(fp);	
-				except PermissionError as e:
-					# create a new file at the script directory
-					print("Unable to update original files, updated file created instead.")
-					newfile = script_dir + os.sep + os.path.basename(file)
-					with open(newfile, "w") as fp:
-						docelement.writexml(fp);
+			try:
+				with open(file, "w") as fp:
+					docelement.writexml(fp);	
+			except PermissionError as e:
+				# create a new file at the script directory
+				print("Unable to update original files, updated file created instead.")
+				newfile = script_dir + os.sep + os.path.basename(file)
+				with open(newfile, "w") as fp:
+					docelement.writexml(fp);
 					
 
 
