@@ -1,14 +1,14 @@
+# -*- coding: utf-8 -*-
 # Author: Nyon Yow Feng
 # Created: 12-August-2018
-# Author: Nyon Yow Feng
-# Created: 12-August-2018
+# Target python version: 3.7
 
 import os;
 import glob;
 import re;
 import xml.dom.minidom;
+import os;
 
-import os
 script_dir = (os.path.dirname(os.path.realpath(__file__)));
 
 input_dir = input("Enter directory to generate thumbnails for: ");
@@ -67,7 +67,7 @@ for file in list_files:
 				# create a new file at the script directory
 				print("Unable to update original files, updated file created instead.")
 				newfile = script_dir + os.sep + os.path.basename(file)
-				with open(newfile, "w") as fp:
+				with open(newfile, "w", encoding="utf-8") as fp:
 					docelement.writexml(fp);
 					
 
